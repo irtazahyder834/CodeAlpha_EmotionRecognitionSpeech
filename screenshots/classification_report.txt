@@ -1,0 +1,19 @@
+Test Accuracy: 1.0000
+
+              precision    recall  f1-score   support
+
+       angry     1.0000    1.0000    1.0000         8
+        calm     1.0000    1.0000    1.0000         8
+     disgust     1.0000    1.0000    1.0000         8
+     fearful     1.0000    1.0000    1.0000         8
+       happy     1.0000    1.0000    1.0000         8
+     neutral     1.0000    1.0000    1.0000         8
+         sad     1.0000    1.0000    1.0000         8
+   surprised     1.0000    1.0000    1.0000         8
+
+    accuracy                         1.0000        64
+   macro avg     1.0000    1.0000    1.0000        64
+weighted avg     1.0000    1.0000    1.0000        64
+
+
+NOTE: This run used an in-memory SYNTHETIC demo dataset.
