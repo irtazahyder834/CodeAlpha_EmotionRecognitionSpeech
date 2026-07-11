@@ -1,136 +1,227 @@
-# Emotion Recognition from Speech
+# 🎙️ Emotion Recognition from Speech
 
-A deep learning project that classifies human emotions (happy, sad, angry,
-calm, neutral, fearful, disgust, surprised) from speech audio using a
-**CNN + LSTM** model built with **PyTorch**, trained on MFCC
-features from the RAVDESS dataset. Includes an interactive Streamlit app
-for live predictions.
+A deep learning project that classifies human emotions (**Happy, Sad, Angry, Calm, Neutral, Fearful, Disgust, Surprised**) from speech audio using a **CNN + LSTM** model built with **PyTorch**, trained on **MFCC** features extracted from the **RAVDESS** dataset.
 
-Built as part of the **CodeAlpha Machine Learning Internship**.
+The project also includes an interactive **Streamlit** web application for real-time emotion prediction from uploaded speech audio.
 
-## Project Overview
+> 🚀 Built as part of the **CodeAlpha Machine Learning Internship**.
 
-This project extracts MFCC (Mel-Frequency Cepstral Coefficient) time
-sequences from speech recordings using `librosa`, trains a CNN+LSTM deep
-learning model to classify the speaker's emotion, and serves predictions
-through a Streamlit web app where users can upload a WAV file, play it
-back, and view the predicted emotion along with a full probability
-breakdown.
+---
 
-## Model Architecture
+# 📌 Project Overview
 
-Each 3-second clip is represented as a `(130, 40)` sequence of MFCC frames
-(time steps x MFCC coefficients). The Conv1D layers learn local
-spectro-temporal patterns; the LSTM layer models how those patterns evolve
-over the utterance:
+This project extracts **MFCC (Mel-Frequency Cepstral Coefficients)** from speech recordings using **Librosa**, trains a **CNN + LSTM** deep learning model to classify emotions, and provides predictions through a **Streamlit** web application.
 
-```
-Input (130 time steps x 40 MFCCs)
- -> Conv1D(64, kernel=5, relu) -> BatchNorm -> MaxPool -> Dropout(0.3)
- -> Conv1D(128, kernel=5, relu) -> BatchNorm -> MaxPool -> Dropout(0.3)
- -> LSTM(128) -> Dropout(0.4)
- -> Dense(64, relu) -> Dropout(0.3)
- -> Dense(num_classes, softmax)
-```
+Users can:
 
-- Framework: PyTorch
-- Optimizer: Adam
-- Loss: sparse categorical cross-entropy
-- Regularization: BatchNorm + Dropout + early stopping on a validation split
+- 🎤 Upload a WAV audio file
+- ▶️ Listen to the uploaded audio
+- 😊 Predict the speaker's emotion
+- 📊 View confidence scores for all emotion classes
 
-## Dataset
+---
 
-- **RAVDESS** (Ryerson Audio-Visual Database of Emotional Speech and Song):
-  24 professional actors, 8 emotions (neutral, calm, happy, sad, angry,
-  fearful, disgust, surprised).
-- Expected folder layout: `dataset/Actor_01/*.wav`, `dataset/Actor_02/*.wav`, etc.
-- Optional: **TESS** and **EMO-DB** are also supported — place audio files
-  in emotion-named subfolders and `utils.load_dataset_manifest` will fall
-  back to using the folder name as the label.
-- **Automatic offline demo fallback**: if `dataset/` contains no `.wav`
-  files, `train.py` automatically generates an in-memory synthetic demo
-  dataset (see `utils.generate_synthetic_dataset`) so the full pipeline —
-  feature extraction, training, evaluation, and plots — still runs
-  end-to-end out of the box. Add real RAVDESS audio and re-run for
-  authentic results; `screenshots/classification_report.txt` clearly
-  states which mode was used.
+# 🧠 Model Architecture
 
-## Feature Extraction
-
-For each audio clip (resampled to 22.05kHz, padded/truncated to 3 seconds),
-`librosa` extracts 40 MFCC coefficients per frame, producing a
-`(time_steps, 40)` sequence that is padded/truncated to a fixed 130 frames
-before being fed to the CNN+LSTM model. Waveform, MFCC, and Mel Spectrogram
-plots are also generated for a sample clip for visualization.
-
-## Project Structure
+Each **3-second** audio clip is converted into a **(130 × 40)** MFCC feature sequence.
 
 ```
-Emotion_Recognition/
+Input (130 × 40 MFCC)
+
+        │
+        ▼
+Conv1D (64, Kernel=5, ReLU)
+        │
+BatchNorm
+        │
+MaxPooling
+        │
+Dropout (0.3)
+        │
+        ▼
+Conv1D (128, Kernel=5, ReLU)
+        │
+BatchNorm
+        │
+MaxPooling
+        │
+Dropout (0.3)
+        │
+        ▼
+LSTM (128)
+        │
+Dropout (0.4)
+        │
+Dense (64, ReLU)
+        │
+Dropout (0.3)
+        │
+Dense (8 Classes, Softmax)
+```
+
+### ⚙️ Training Configuration
+
+- 🧠 Framework: PyTorch
+- ⚡ Optimizer: Adam
+- 📉 Loss Function: Sparse Categorical Cross-Entropy
+- 🛡️ Regularization:
+  - Batch Normalization
+  - Dropout
+  - Early Stopping
+
+---
+
+# 🎵 Dataset
+
+### 📂 RAVDESS
+
+Ryerson Audio-Visual Database of Emotional Speech and Song
+
+- 👥 24 Professional Actors
+- 🎭 8 Emotion Classes
+  - Neutral
+  - Calm
+  - Happy
+  - Sad
+  - Angry
+  - Fearful
+  - Disgust
+  - Surprised
+
+Expected folder structure:
+
+```
+dataset/
 │
-├── dataset/                             # (optional — place RAVDESS/TESS/EMO-DB audio here)
-├── models/                              # Saved trained model (.pt) + label encoder
-├── screenshots/                         # Auto-generated plots & reports
-├── app.py                               # Streamlit GUI
-├── train.py                             # Training pipeline
-├── predict.py                           # Inference utilities / CLI
-├── utils.py                             # Feature extraction & visualization helpers
-├── requirements.txt
-├── README.md
-└── emotion_recognition.ipynb
+├── Actor_01/
+├── Actor_02/
+├── Actor_03/
+...
 ```
 
-## Installation
+### ✅ Also Supported
+
+- 🎤 TESS
+- 🎤 EMO-DB
+
+Simply place audio files inside emotion-named folders.
+
+### 💡 Offline Demo Mode
+
+If no dataset is detected, the project automatically creates a synthetic dataset so the complete training pipeline still runs successfully.
+
+---
+
+# 🎼 Feature Extraction
+
+Each audio file is:
+
+- 🎧 Resampled to **22.05 kHz**
+- ✂️ Padded/Trimmed to **3 seconds**
+- 📈 Converted into **40 MFCC coefficients**
+- 📊 Fixed to **130 time frames**
+
+The project also generates:
+
+- 📈 Waveform
+- 🎼 MFCC
+- 🌈 Mel Spectrogram
+
+---
+
+# 📁 Project Structure
+
+```text
+CodeAlpha_EmotionRecognitionFromSpeech/
+│
+├──  dataset/
+├──  models/
+├──  screenshots/
+├──  app.py
+├──  train.py
+├──  predict.py
+├──  utils.py
+├──  requirements.txt
+├──  README.md
+└──  emotion_recognition.ipynb
+```
+
+---
+
+# 🚀 Installation
 
 ```bash
-# 1. Clone the repository
-git clone https://github.com/<your-username>/CodeAlpha_EmotionRecognition.git
-cd CodeAlpha_EmotionRecognition
+# Clone Repository
+git clone https://github.com/<your-username>/CodeAlpha_EmotionRecognitionFromSpeech.git
 
-# 2. Install dependencies
+cd CodeAlpha_EmotionRecognitionFromSpeech
+
+# Install dependencies
 pip install -r requirements.txt
 
-# 3. (Optional but recommended) Download the RAVDESS dataset and place
-#    actor folders inside dataset/. If skipped, train.py automatically
-#    uses a synthetic demo dataset instead.
-
-# 4. Train the model
+# Train Model
 python train.py --dataset_dir dataset
 
-# 5. Launch the Streamlit app
+# Launch Streamlit App
 streamlit run app.py
 ```
 
-## Results
+---
 
-After running `train.py`, the following are generated in `screenshots/`:
+# 📊 Results
 
-- `waveform.png`, `mfcc.png`, `spectrogram.png` — sample audio visualizations
-- `emotion_distribution.png` — class balance across the dataset
-- `training_history.png` — training/validation loss & accuracy curves
-- `confusion_matrix.png` — confusion matrix across all emotions
-- `classification_report.txt` — precision, recall, F1-score, accuracy
+Running `train.py` automatically generates:
 
-The included training run used the offline synthetic fallback dataset
-(since no RAVDESS audio was present) and reached 100% test accuracy on
-that synthetic data — expected, since the synthetic waveforms are
-cleanly separable by design. **Swap in real RAVDESS/TESS/EMO-DB audio in
-`dataset/` and re-run `train.py` for a realistic accuracy figure**
-(typically 60-75% test accuracy on RAVDESS with this architecture).
+- 📈 Waveform
+- 🎼 MFCC
+- 🌈 Spectrogram
+- 📊 Emotion Distribution
+- 📉 Training History
+- 🔥 Confusion Matrix
+- 📄 Classification Report
 
-## Screenshots
+The included demo uses a synthetic dataset and achieves **100% accuracy** because the generated samples are intentionally separable.
 
-See the `screenshots/` folder for generated waveform, MFCC, spectrogram,
-training curves, and confusion matrix visualizations from an actual
-training run included in this package.
+For realistic performance, replace the dataset with **RAVDESS**, **TESS**, or **EMO-DB**.
 
-## Future Improvements
+Expected accuracy:
 
-- Add support for TESS and EMO-DB datasets in a unified training run.
-- Apply data augmentation (pitch shift, time stretch, noise injection).
-- Try attention layers or a pretrained audio embedding (e.g. wav2vec 2.0)
-  as a feature extractor for a further accuracy boost.
+**🎯 60–75% on the RAVDESS dataset**
 
+---
 
-### Repository Name
-`CodeAlpha_EmotionRecognitionFromSpeech`
+# 🖼️ Screenshots
+
+The **screenshots/** folder includes:
+
+- 📈 Waveform
+- 🎼 MFCC
+- 🌈 Spectrogram
+- 📉 Training Curves
+- 🔥 Confusion Matrix
+- 📄 Classification Report
+
+---
+
+# 🚀 Future Improvements
+
+- ➕ Combine RAVDESS, TESS and EMO-DB datasets
+- 🎧 Audio Data Augmentation
+- 🧠 Attention Mechanism
+- 🤖 Wav2Vec 2.0 Feature Extractor
+- ☁️ Cloud Deployment
+- 📱 Mobile-Friendly Interface
+
+---
+
+## 👨‍💻 Author
+
+**Irtaza Hyder**
+
+Machine Learning Intern at **CodeAlpha**
+
+Bachelor of Science in Computer Science (BSCS)
+
+---
+
+⭐ If you found this project useful, don't forget to **Star** the repository!
