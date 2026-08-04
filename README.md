@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/banner.png" alt="Heart Disease Prediction Banner" width="100%">
+  <img src="assets/banner.png" alt="Emotion Recognition From Speech  Banner" width="100%">
 </p>
 
 # 🎙️ Speech Emotion Recognition
