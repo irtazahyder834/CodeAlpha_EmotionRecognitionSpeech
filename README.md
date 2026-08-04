@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/banner.png" alt="Heart Disease Prediction Banner" width="100%">
+</p>
+
 # 🎙️ Speech Emotion Recognition
 
 A deep learning system for classifying human emotions from speech audio — Happy, Sad, Angry, Calm, Neutral, Fearful, Disgust, and Surprised — built with a CNN + LSTM architecture in PyTorch, trained on MFCC features extracted from the RAVDESS dataset. Includes an interactive Streamlit web application for real-time emotion prediction from uploaded audio.
